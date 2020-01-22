@@ -1,0 +1,13 @@
+{
+  "name": "road-planning-datapipeline",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:developmentseed/road-planning-datapipeline.git",
+  "author": "Development Seed",
+  "license": "MIT",
+  "dependencies": {
+    "@turf/length": "^6.0.2",
+    "fs-extra": "^8.1.0",
+    "geojson-stream": "^0.1.0"
+  }
+}
