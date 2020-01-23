@@ -41,6 +41,5 @@ fs
       }
     }
   }))
-  // .pipe(new Transform({ objectMode: true, transform: transform }))
   .pipe(geojsonStream.stringify())
   .pipe(out);

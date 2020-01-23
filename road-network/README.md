@@ -34,7 +34,7 @@ The script will do minor cleaning of the road segments, mostly of the properties
 * **Way index file**  
 `s3://[output_bucket]/roads/way_index.json`
 * **CSV to populate the database**  
-`s3://[output_bucket]/roads/db.csv`
+`s3://[output_bucket]/roads/rn-props.csv`
 
 Each road segment has the following properties:
 
@@ -51,10 +51,10 @@ Each road segment has the following properties:
 - `condition` - the surface condition. One of:
   - `ACA` - 
   - `ASA` - 
-  - `BSS` - 
   - `ATA` - 
   - `BCS` - 
   - `BCT` - 
+  - `BSS` -
   - `BST` - 
   - `BTS` - 
   - `BTT` - 
