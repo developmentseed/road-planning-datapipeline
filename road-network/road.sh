@@ -50,13 +50,32 @@ docker run -it --rm \
     -o /data/output/roads/base-rn.osm
 
 echo 'Generate the OSRM files'
+cp $(pwd)/lib/osrm_profile-$PROJECT_ID.lua $(pwd)/.tmp/$PROJECT_ID/input/roads
+
+# Run extract on the OSM XML
 docker run -it --rm \
   -v $(pwd)/.tmp/$PROJECT_ID/:/data \
   osrm/osrm-backend \
   osrm-extract \
-    -p /opt/car.lua
-    # -p /data/input/roads/osrm_profile.lua \
+    -p /data/input/roads/osrm_profile-$PROJECT_ID.lua \
     /data/output/roads/base-rn.osm
+
+# Move OSRM files to folder for organization purposes
+mkdir ./.tmp/$PROJECT_ID/output/roads/osrm -p
+mv ./.tmp/$PROJECT_ID/output/roads/*.osrm* ./.tmp/$PROJECT_ID/output/roads/osrm/
+
+# Run partition and customize
+docker run -it --rm \
+  -v $(pwd)/.tmp/$PROJECT_ID/:/data \
+  osrm/osrm-backend \
+  osrm-partition \
+    /data/output/roads/osrm/base-rn.osrm
+
+docker run -it --rm \
+  -v $(pwd)/.tmp/$PROJECT_ID/:/data \
+  osrm/osrm-backend \
+  osrm-customize \
+    /data/output/roads/osrm/base-rn.osrm
 
 echo 'All output files stored in /.tmp/'$PROJECT_ID'/output/roads/'
 
@@ -66,5 +85,5 @@ aws s3 sync \
   s3://$S3_OUTPUT-$PROJECT_ID/roads \
   --delete \
   --content-encoding gzip \
-  --acl public-read
+  --acl public-read \
   --quiet

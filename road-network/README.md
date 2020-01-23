@@ -11,14 +11,14 @@ Requirements:
 * node 12
 
 ## Input
-The input files are expected to be stored in a single S3 bucket (eg. `s3://rr-haiti/roads`). The script syncs the contents of the S3 bucket to a local directory (`./.tmp`).
 
 * **road network dataset**  
 `s3://[bucket]/roads/RoutesRAI_2015.shp`  
-In a format supported by `gdal`. This road network needs to be routable.
+In a format supported by `gdal`. This road network needs to be routable.  
+The script syncs the contents of the S3 bucket to a local directory (`./.tmp`).
 * **OSRM speed profile** - optional  
-`s3://[bucket]/roads/osrm_profile.lua`  
-The OSRM speed profile that can be used with the road network dataset. Falls back to default speed profile that is OSM compatible.
+`../lib/osrm_profile-haiti.lua`  
+The OSRM speed profile that can be used with the road network dataset. Falls back to default speed profile that is OSM compatible. This is not stored on S3 so it's versioned, and the full project can use the same speed profile.
 
 ## Output
 The script will do minor cleaning of the road segments, mostly of the properties. It produces the following datasets to be used in production:
