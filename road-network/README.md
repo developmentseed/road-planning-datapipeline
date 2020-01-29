@@ -43,11 +43,12 @@ Each road segment has the following properties:
 - `roadId` - a human readable and unique road ID that includes the route number. Eg. `RA103-1290`
 - `type` - the type of road. One of:
   - `RA` - Route Agricole
-  - `RU` - Route 
-  - `RD` - Route 
-  - `RC` - Route 
-  - `RN` - Route 
-  - `RI` - Route 
+  - `RU` - Route Urbaine
+  - `RD` - Route Departementale
+  - `RC` - Route Communale
+  - `RN` - Route Nationale
+  - `RI` - Route International
+  - `R` - Unclassified. Segments that didn't have a route classification in the original data.
 - `condition` - the surface condition. One of:
   - `ACA` - 
   - `ASA` - 
@@ -68,5 +69,5 @@ Each road segment has the following properties:
   - `DCT` - 
   - `DTT` - 
   - `DUT` - 
-  - `RNV` - 
+  - `RNV` - Route non Visitee. A route that wasn't surveyed.
 - `length` - length of road segment in meters. Eg. `1253`

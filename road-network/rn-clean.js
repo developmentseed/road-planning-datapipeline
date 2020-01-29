@@ -26,10 +26,20 @@ function composeId (props, idx) {
   return `${props.CODE || 'R'}-${idx}`
 }
 
+/**
+ * Checks if a road segment can be invested in.
+ * Roads with classification RU or underfined are not investible.
+ *
+ * @param {string} TYPE The route type
+ */
+function checkInvestible(type) {
+  return (type && type !== 'RU')
+}
+
 fs
   .createReadStream(process.argv[2])
-  .pipe(geojsonStream.parse((ft, idx) => {
-    return {
+  .pipe(geojsonStream.parse((ft, idx) => (
+    {
       ...ft,
       properties: {
         id: idx,
@@ -37,9 +47,10 @@ fs
         route: ft.properties.CODE,
         type: ft.properties.TYPE,
         condition: ft.properties.RAI_2015,
-        length: Math.floor(length(ft) * 1000)
+        length: Math.floor(length(ft) * 1000),
+        investible: checkInvestible(ft.properties.TYPE)
       }
     }
-  }))
+  )))
   .pipe(geojsonStream.stringify())
   .pipe(out);
