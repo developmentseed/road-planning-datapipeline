@@ -41,6 +41,7 @@ fs
   .pipe(geojsonStream.parse((ft, idx) => (
     {
       ...ft,
+      roadId: composeId(ft.properties, idx),
       properties: {
         id: idx,
         roadId: composeId(ft.properties, idx),
