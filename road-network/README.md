@@ -11,14 +11,14 @@ Requirements:
 * node 12
 
 ## Input
-The input files are expected to be stored in a single S3 bucket (eg. `s3://rr-haiti/roads`). The script syncs the contents of the S3 bucket to a local directory (`./.tmp`).
 
 * **road network dataset**  
 `s3://[bucket]/roads/RoutesRAI_2015.shp`  
-In a format supported by `gdal`. This road network needs to be routable.
+In a format supported by `gdal`. This road network needs to be routable.  
+The script syncs the contents of the S3 bucket to a local directory (`./.tmp`).
 * **OSRM speed profile** - optional  
-`s3://[bucket]/roads/osrm_profile.lua`  
-The OSRM speed profile that can be used with the road network dataset. Falls back to default speed profile that is OSM compatible.
+`../lib/osrm_profile-haiti.lua`  
+The OSRM speed profile that can be used with the road network dataset. Falls back to default speed profile that is OSM compatible. This is not stored on S3 so it's versioned, and the full project can use the same speed profile.
 
 ## Output
 The script will do minor cleaning of the road segments, mostly of the properties. It produces the following datasets to be used in production:
@@ -34,7 +34,7 @@ The script will do minor cleaning of the road segments, mostly of the properties
 * **Way index file**  
 `s3://[output_bucket]/roads/way_index.json`
 * **CSV to populate the database**  
-`s3://[output_bucket]/roads/db.csv`
+`s3://[output_bucket]/roads/rn-props.csv`
 
 Each road segment has the following properties:
 
@@ -43,18 +43,19 @@ Each road segment has the following properties:
 - `roadId` - a human readable and unique road ID that includes the route number. Eg. `RA103-1290`
 - `type` - the type of road. One of:
   - `RA` - Route Agricole
-  - `RU` - Route 
-  - `RD` - Route 
-  - `RC` - Route 
-  - `RN` - Route 
-  - `RI` - Route 
+  - `RU` - Route Urbaine
+  - `RD` - Route Departementale
+  - `RC` - Route Communale
+  - `RN` - Route Nationale
+  - `RI` - Route International
+  - `R` - Unclassified. Segments that didn't have a route classification in the original data.
 - `condition` - the surface condition. One of:
   - `ACA` - 
   - `ASA` - 
-  - `BSS` - 
   - `ATA` - 
   - `BCS` - 
   - `BCT` - 
+  - `BSS` -
   - `BST` - 
   - `BTS` - 
   - `BTT` - 
@@ -68,5 +69,5 @@ Each road segment has the following properties:
   - `DCT` - 
   - `DTT` - 
   - `DUT` - 
-  - `RNV` - 
+  - `RNV` - Route non Visitee. A route that wasn't surveyed.
 - `length` - length of road segment in meters. Eg. `1253`
