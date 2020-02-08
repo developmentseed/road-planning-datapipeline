@@ -38,6 +38,7 @@ node ./road-network/props-csv.js ./.tmp/$PROJECT_ID/output/roads/base-rn.geojson
 echo 'Generating the Vector Tiles...'
 docker run -it --rm \
   -v $(pwd)/.tmp/$PROJECT_ID/:/data \
+  --user $(id -u):$(id -g) \
   rn-processing \
   tippecanoe \
     -e /data/output/roads/tiles \
@@ -47,6 +48,7 @@ docker run -it --rm \
 echo 'Generating the OSM XML...'
 docker run -it --rm \
   -v $(pwd)/.tmp/$PROJECT_ID/:/data \
+  --user $(id -u):$(id -g) \
   rn-processing \
   python ./ogr2osm/ogr2osm.py \
     /data/output/roads/base-rn.geojson \
@@ -58,6 +60,7 @@ cp $(pwd)/lib/osrm_profile-$PROJECT_ID.lua $(pwd)/.tmp/$PROJECT_ID/input/roads
 # Run extract on the OSM XML
 docker run -it --rm \
   -v $(pwd)/.tmp/$PROJECT_ID/:/data \
+  --user $(id -u):$(id -g) \
   osrm/osrm-backend \
   osrm-extract \
     -p /data/input/roads/osrm_profile-$PROJECT_ID.lua \
@@ -70,12 +73,14 @@ mv ./.tmp/$PROJECT_ID/output/roads/*.osrm* ./.tmp/$PROJECT_ID/output/roads/osrm/
 # Run partition and customize
 docker run -it --rm \
   -v $(pwd)/.tmp/$PROJECT_ID/:/data \
+  --user $(id -u):$(id -g) \
   osrm/osrm-backend \
   osrm-partition \
     /data/output/roads/osrm/base-rn.osrm
 
 docker run -it --rm \
   -v $(pwd)/.tmp/$PROJECT_ID/:/data \
+  --user $(id -u):$(id -g) \
   osrm/osrm-backend \
   osrm-customize \
     /data/output/roads/osrm/base-rn.osrm
