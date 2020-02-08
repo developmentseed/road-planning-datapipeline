@@ -43,7 +43,8 @@ docker run -it --rm \
   tippecanoe \
     -e /data/output/roads/tiles \
     -n roads \
-    -L roads:/data/output/roads/base-rn.geojson
+    -L roads:/data/output/roads/base-rn.geojson \
+    --use-attribute-for-id=mbId
 
 echo 'Generating the OSM XML...'
 docker run -it --rm \

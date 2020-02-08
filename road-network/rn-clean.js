@@ -39,11 +39,13 @@ function checkInvestible(type) {
 fs
   .createReadStream(process.argv[2])
   .pipe(geojsonStream.parse((ft, idx) => (
+    // mbId is used by Tippecanoe to set the ID on the root of the feature
+    // It will be stripped from the props in the VT
     {
       ...ft,
-      roadId: composeId(ft.properties, idx),
       properties: {
         id: idx,
+        mbId: idx,
         roadId: composeId(ft.properties, idx),
         route: ft.properties.CODE,
         type: ft.properties.TYPE,
