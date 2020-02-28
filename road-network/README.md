@@ -49,25 +49,16 @@ Each road segment has the following properties:
   - `RN` - Route Nationale
   - `RI` - Route International
   - `R` - Unclassified. Segments that didn't have a route classification in the original data.
-- `condition` - the surface condition. One of:
-  - `ACA` - 
-  - `ASA` - 
-  - `ATA` - 
-  - `BCS` - 
-  - `BCT` - 
-  - `BSS` -
-  - `BST` - 
-  - `BTS` - 
-  - `BTT` - 
-  - `CCS` - 
-  - `CCT` - 
-  - `CSS` - 
-  - `CST` - 
-  - `CTS` - 
-  - `CTT` - 
-  - `CUT` - 
-  - `DCT` - 
-  - `DTT` - 
-  - `DUT` - 
-  - `RNV` - Route non Visitee. A route that wasn't surveyed.
+- `surface` - the surface type. One of:
+  - `asphalt`
+  - `stabilized-soil`
+  - `earth`
+- `seasonality` - the seasonality of a road. One of:
+  - `all-weather`
+  - `dry-weather`
+  - `not-passable`
+- `width` - the width of the road. One of:
+  - `large`
+  - `medium`
+  - `small`
 - `length` - length of road segment in meters. Eg. `1253`
