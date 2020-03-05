@@ -19,11 +19,55 @@ const out = fs.createWriteStream(process.argv[3]);
  * @param {object} props Properties of the feature
  * @param {number} idx The index of the feature
  *
- * @returns String
+ * @returns {String}
  */
 function composeId (props, idx) {
   // If no Route Number, fall back to 'R'
   return `${props.CODE || 'R'}-${idx}`
+}
+
+// Map the RAI code to attributes
+const raiCodes = {
+  seasonality: {
+    A: 'all-weather',
+    B: 'all-weather',
+    C: 'dry-weather',
+    D: 'not-passable'
+  },
+  width: {
+    S: 'large',
+    C: 'medium',
+    T: 'small',
+    U: 'unknown'
+  },
+  surface: {
+    A: 'asphalt',
+    S: 'stabilized-soil',
+    T: 'earth'
+  }
+}
+
+/**
+ * Parses the three letter RAI code and returns the road properties. First
+ * position is seasonality, second is width, and third is surface type.
+ *
+ * @param {string} code The RAI_2015 code, a three-letter string
+ * @example
+ *   // returns { surface: 'earth', seasonality: 'all-weather', width: 'small' }
+ *   parseRaiCode('ATT')
+ *
+ * @returns {Object} An object with surface, seasonality and width of the road
+ */
+function parseRaiCode (code) {
+  // Ensure uppercase, just in case
+  // Cast undefined & nulls to 'RNV', which is Route Non Visitee in the dataset
+  code = code ? code.toUpperCase() : 'RNV'
+
+  return {
+    seasonality: raiCodes['seasonality'][code[0]] || null,
+    width: raiCodes['width'][code[1]] || null,
+    surface: raiCodes['surface'][code[2]] || null
+  }
 }
 
 /**
@@ -49,9 +93,9 @@ fs
         roadId: composeId(ft.properties, idx),
         route: ft.properties.CODE,
         type: ft.properties.TYPE,
-        condition: ft.properties.RAI_2015,
         length: Math.floor(length(ft) * 1000),
-        investible: checkInvestible(ft.properties.TYPE)
+        investible: checkInvestible(ft.properties.TYPE),
+        ...parseRaiCode(ft.properties.RAI_2015)
       }
     }
   )))
