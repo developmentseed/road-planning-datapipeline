@@ -1,4 +1,33 @@
-# Flood COG
+# Flood
+## Depths
+A script that calculates flood depths in meters for different flood types (more info below). The flood depths are calculated using rasterio zonalstats, with the support from `jq`.
+
+```
+$ bash floods/depth.sh
+```
+
+### Requirements
+
+* [rasterio cli](https://rasterio.readthedocs.io/en/latest/cli.html)
+* [jq](https://stedolan.github.io/jq/)
+
+### Output
+The process outputs a CSV with the following structure:
+
+``` csv
+roadId,id,flood,rp,min,max,count,mean
+"RA100010-14",14,"FD",5,0.013906881213188171,0.5327581167221069,9,0.42234712176852757
+"RD204-32",32,"FD",5,0.05331336706876755,0.06524050235748291,4,0.05644490569829941
+```
+
+This files only includes road segments that were flooded in a particular flood / return period. If a segment is not in this file, it was not flooded.
+
+* `min` - minimum flood depth in meters
+* `max` - maximum flood depth in meters
+* `count` - amount of pixels the road segment intersected with
+* `mean` - the mean flood depth in meters
+
+## COG
 All the original data flood masks were converted to Cloud Optimized Geotiffs to facilitate further analysis.
 
 ```
