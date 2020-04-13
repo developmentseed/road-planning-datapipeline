@@ -57,7 +57,7 @@ Each way must have an `id` tag that uniquely identifies the way.
 
 To convert the road network to OSRM format:
 ```
-docker run -t -v "${PWD}:/data" osrm/osrm-backend osrm-extract -p /data/lib/profile.lua /data/road-network.osm
+docker run -t -v "${PWD}:/data" osrm/osrm-backend osrm-extract -p /data/lib/profile-speeds.lua /data/road-network.osm
 docker run -t -v "${PWD}:/data" osrm/osrm-backend osrm-partition /data/road-network.osrm
 docker run -t -v "${PWD}:/data" osrm/osrm-backend osrm-customize /data/road-network.osrm
 mkdir rn
