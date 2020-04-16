@@ -4,10 +4,10 @@ const csv = require('csv')
 const util = require('util')
 const stream = require('stream')
 
-const eadFlood = require('./ead-flood')
-const roadUtils = require('../utils/roads')
+const ead = require('../lib/roads/ead')
+const roadUtils = require('../lib/roads/utils')
+const hazards = require('../lib/instance/hazards')
 
-// const { round } = require('../utils')
 const pipeline = util.promisify(stream.pipeline)
 
 /**
@@ -41,10 +41,7 @@ if (!INPUT_DIR || !OUTPUT_DIR || !FLOOD_TYPE) {
  * @return {array}
  */
 function fillDepths (depths) {
-  // TMP Hardcoded, should be passed as an argument of the script
-  const rp = [ 5, 10, 20, 50, 75, 100, 200, 250, 500, 1000 ]
-
-  return rp.map(r => {
+  return hazards.floods.rp.map(r => {
     const rpDepth = depths.find(d => Number(d.rp) === r)
 
     return {
@@ -86,7 +83,7 @@ async function main () {
 
       return {
         roadId: roadSegment.roadId,
-        value: eadFlood.calculateRoadEAD(roadSegment, allDepths)
+        value: ead.calculateRoadEAD(roadSegment, allDepths)
       }
     }),
     csv.stringify({ header: true }),
