@@ -16,6 +16,7 @@ aws s3 sync s3://$S3_INPUT-$PROJECT_ID/roads/ ./.tmp/$PROJECT_ID/input/roads
 echo 'Building Docker image for processing...'
 docker build -t rn-processing ./road-network/ -q
 
+# -explodecollections will turn multilinestring into linestring
 echo 'Generating the base GeoJSON...'
 docker run -it --rm \
   -v $(pwd)/.tmp/$PROJECT_ID/:/data \
@@ -24,7 +25,8 @@ docker run -it --rm \
     -f "GeoJSON" \
     /data/output/roads/raw-rn.geojson \
     /data/input/roads/$RN \
-    -t_srs EPSG:4326
+    -t_srs EPSG:4326 \
+    -explodecollections
 
 echo 'Cleaning up the road network properties...'
 node ./road-network/rn-clean.js ./.tmp/$PROJECT_ID/output/roads/raw-rn.geojson ./.tmp/$PROJECT_ID/output/roads/base-rn.geojson

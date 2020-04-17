@@ -8,13 +8,8 @@ S3_OUTPUT=road-data-production
 
 echo 'Housekeeping and getting data from S3...'
 rm -rf ./.tmp/$PROJECT_ID/output/bridges
-<<<<<<< HEAD
-mkdir ./.tmp/$PROJECT_ID/input -p
-mkdir ./.tmp/$PROJECT_ID/output/bridges -p
-=======
 mkdir -p ./.tmp/$PROJECT_ID/input
 mkdir -p ./.tmp/$PROJECT_ID/output/bridges
->>>>>>> 21ee8b4d80f776209bd7a04c9b9035d9bc6efb1b
 
 aws s3 sync s3://$S3_INPUT-$PROJECT_ID/bridges/ ./.tmp/$PROJECT_ID/input/bridges
 aws s3 cp s3://$S3_OUTPUT-$PROJECT_ID/roads/base-rn.geojson ./.tmp/$PROJECT_ID/input/bridges/ # load GeoJSON road network data
