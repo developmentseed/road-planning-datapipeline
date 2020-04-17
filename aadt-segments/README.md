@@ -1,6 +1,6 @@
 # OD Pairs segment route
 
-This script calculates a route for each OD pair using the **shortest path** method.
+This script calculates a route for each OD pair using the **fastest path** method according to the OSRM speed profile in `instance/osrm_profile-haiti` of the [road-planning-functions](https://github.com/developmentseed/road-planning-functions) repo.
 It will return the distance and ids of the road segments used for each route in a `results.json` file.
 Any OD pair that errors will be written out to `error.json`
 
@@ -56,12 +56,23 @@ Each way must have an `id` tag that uniquely identifies the way.
 **Rename the road network to `road-network.osm`**
 
 To convert the road network to OSRM format:
-```
-docker run -t -v "${PWD}:/data" osrm/osrm-backend osrm-extract -p /data/lib/profile-speeds.lua /data/road-network.osm
+```bash
+# Profile need to be in directory for docker to access it
+cp ../lib/instance/osrm_profile-haiti.lua profile.lua
+
+# Run OSRM
+docker run -t -v "${PWD}:/data" osrm/osrm-backend osrm-extract -p /data/profile.lua /data/road-network.osm
 docker run -t -v "${PWD}:/data" osrm/osrm-backend osrm-partition /data/road-network.osrm
 docker run -t -v "${PWD}:/data" osrm/osrm-backend osrm-customize /data/road-network.osrm
+
+# Move things around
 mkdir rn
 mv road-network.osrm* rn
+```
+
+**Getting the road-network**
+```
+aws s3 cp s3://rr-data-haiti/roads/routes.osm.xml road-network.osm
 ```
 
 #### OD pairs
@@ -89,6 +100,13 @@ From od-generator docs:
     }
   ]
 }
+```
+
+More info about how the OD pairs were generated can be found in [road-planning-datapipeline#14](https://github.com/developmentseed/road-planning-datapipeline/issues/14)
+
+**Getting the OD pairs**
+```
+aws s3 cp s3://rr-data-haiti/aadt-segments/odpairs.json .
 ```
 
 ## Running the script
