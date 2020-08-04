@@ -13,6 +13,8 @@
     "csv-stringify": "^5.3.6",
     "fs-extra": "^8.1.0",
     "geojson-stream": "^0.1.0",
-    "osrm": "^5.22.0"
+    "osm2obj": "^3.0.0",
+    "osrm": "^5.22.0",
+    "through2": "^4.0.2"
   }
 }
