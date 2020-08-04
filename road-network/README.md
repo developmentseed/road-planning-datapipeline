@@ -63,6 +63,11 @@ Each road segment has the following properties:
   - `small`
 - `length` - length of road segment in meters. Eg. `1253`
 
+# Custom OSRM
+The haiti project requires a custom version of OSRM backend which can be found at https://github.com/developmentseed/osrm-backend.
+This is needed because the original OSRM does [not support float values](https://github.com/Project-OSRM/osrm-backend/issues/5079) for speed updates.
+The docker container is at `developmentseed/osrm-backend:v5.22.0`
+
 # Extract ways
 Creates a list of all ways with their nodes ids and properties.
 The result is an array with an object per way:
