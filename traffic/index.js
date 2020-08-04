@@ -45,11 +45,16 @@ async function main () {
     odPairAADTIndex[`o${o.o}-d${o.d}`] = aadtSum;
   });
 
-  await fs.writeJSON('odpairs-aadt-index.json', odPairAADTIndex);
+  const result = {
+    ways: aadtIndex,
+    pairs: odPairAADTIndex
+  }
+
+  await fs.writeJSON('aadt-index.json', result);
 
   console.log('Result saved to:');
   console.log('');
-  console.log('  odpairs-aadt-index.json');
+  console.log('  aadt-index.json');
   console.log('');
 }
 

@@ -1,20 +1,26 @@
 # AADT (Traffic on each way)
 
-This script creates an index with the total AADT per ODpair.
+This script creates an index with the total AADT per ODpair, and the AADT for each way
 The ODpair AADT is calculated by adding the AADT value of the ways used by the ODpair.
-The index is an object where each key is made of the origin and destinations indexes present in the ODpairs file.
+The pairs property is an object where each key is made of the origin and destinations indexes present in the ODpairs file.
 
 Example:
 ```json
   {
-    "o0-d116": 180,
-    "o1-d116": 210,
-    "o2-d116": 150,
-    "o3-d116": 150,
-    "o4-d116": 300
+    ways: {
+      "0": 30,
+      "1": 12
+    },
+    pairs: {
+      "o0-d116": 180,
+      "o1-d116": 210,
+      "o2-d116": 150,
+      "o3-d116": 150,
+      "o4-d116": 300
+    }
   }
 ```
-The index is has this type of key because not all ODpairs present in the ODpairs file ended up being routable, therefore making an indexed array unreliable.
+The `pairs` has this type of key because not all ODpairs present in the ODpairs file ended up being routable, therefore making an indexed array unreliable.
 
 ## Data requirements
 
