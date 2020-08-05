@@ -55,7 +55,8 @@ docker run -it --rm \
   rn-processing \
   python ./ogr2osm/ogr2osm.py \
     /data/output/roads/base-rn.geojson \
-    -o /data/output/roads/base-rn.osm
+    -o /data/output/roads/base-rn.osm \
+    --positive-id
 
 echo 'Generating the OSRM files...'
 cp $(pwd)/lib/osrm_profile-$PROJECT_ID.lua $(pwd)/.tmp/$PROJECT_ID/input/roads
