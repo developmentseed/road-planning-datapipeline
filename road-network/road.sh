@@ -65,7 +65,7 @@ cp $(pwd)/lib/osrm_profile-$PROJECT_ID.lua $(pwd)/.tmp/$PROJECT_ID/input/roads
 docker run -it --rm \
   -v $(pwd)/.tmp/$PROJECT_ID/:/data \
   --user $(id -u):$(id -g) \
-  osrm/osrm-backend \
+  developmentseed/osrm-backend:v5.22.0 \
   osrm-extract \
     -p /data/input/roads/osrm_profile-$PROJECT_ID.lua \
     /data/output/roads/base-rn.osm
@@ -78,14 +78,14 @@ mv ./.tmp/$PROJECT_ID/output/roads/*.osrm* ./.tmp/$PROJECT_ID/output/roads/osrm/
 docker run -it --rm \
   -v $(pwd)/.tmp/$PROJECT_ID/:/data \
   --user $(id -u):$(id -g) \
-  osrm/osrm-backend \
+  developmentseed/osrm-backend:v5.22.0 \
   osrm-partition \
     /data/output/roads/osrm/base-rn.osrm
 
 docker run -it --rm \
   -v $(pwd)/.tmp/$PROJECT_ID/:/data \
   --user $(id -u):$(id -g) \
-  osrm/osrm-backend \
+  developmentseed/osrm-backend:v5.22.0 \
   osrm-customize \
     /data/output/roads/osrm/base-rn.osrm
 
