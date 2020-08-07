@@ -62,3 +62,48 @@ Each road segment has the following properties:
   - `medium`
   - `small`
 - `length` - length of road segment in meters. Eg. `1253`
+
+# Custom OSRM
+The haiti project requires a custom version of OSRM backend which can be found at https://github.com/developmentseed/osrm-backend.
+This is needed because the original OSRM does [not support float values](https://github.com/Project-OSRM/osrm-backend/issues/5079) for speed updates.
+The docker container is at `developmentseed/osrm-backend:v5.22.0`
+
+# Extract ways
+Creates a list of all ways with their nodes ids and properties.
+The result is an array with an object per way:
+
+```
+[
+  {
+    "type": "way",
+    "id": "234",
+    "visible": true,
+    "nodes": ["235","236","237","238"],
+    "tags": {
+      "seasonality": "",
+      "route": "RU10230008",
+      "mbId": "8",
+      "surface": "",
+      "investible": "false",
+      "width": "",
+      "length": "110",
+      "roadId": "RU10230008-8",
+      "type": "RU",
+      "id": "8"
+    }
+  }
+  ...
+]
+```
+
+Requires the `base-rn.osm` output of `bash ./roads.sh`.
+
+Since the script uploads the results to s3, this file can also be downloaded form:
+```
+aws s3 cp s3://road-data-production-haiti/roads/base-rn.osm .
+```
+
+Run with:
+```
+  node extract-ways.js.js
+```

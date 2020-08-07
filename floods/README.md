@@ -3,7 +3,7 @@
 A script that calculates flood depths in meters for different flood types (more info below). The flood depths are calculated using rasterio zonalstats, with the support from `jq`.
 
 ```
-$ bash floods/depth.sh
+$ bash ./depth.sh
 ```
 
 ### Requirements
@@ -43,3 +43,33 @@ The data shows the maximum expected water depth in metres at 10 different return
 overtopping their banks) and `pluvial` (flooding caused by extreme local rainfall).
 
 For both hazards, there is a `defended` model (including the effects of estimated flood defences), and `undefended` (excluding the effects of estimated flood defences).
+
+## Depths index
+The depths2index script creates a json file for each of the flood types, indexed by the way id (roadId property), with the mean depth for each return period.
+Example:
+```json
+  {
+    "RA100010-12": {
+      "50":0.01696695387363434,
+      "75":0.013941295444965363,
+      "100":0.012446931563317776,
+      "500":0.01531951129436493,
+      "1000":0.020273767411708832
+    },
+    "RA100011-13": {
+      "500":0.017587680369615555,
+      "1000":0.0181918665766716
+    },
+    "RA070739-16":{
+      "500":0.019053319469094276,
+      "1000":0.01462982843319575
+    }
+  }
+```
+
+Requires the output of `bash ./depth.sh`.
+
+Run with:
+```
+  node depths2index.js
+```
