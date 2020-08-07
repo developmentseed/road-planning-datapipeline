@@ -41,6 +41,14 @@ Depends on:
 
 # Indicators
 
+## AADT
+`/indicators`  
+Average Annual Daily Traffic per road segment.
+
+Depends on:
+
+* [road network](#road-network)
+
 ## EAD
 `/indicators`  
 Calculates Estimated Annual Damage per road segment.
