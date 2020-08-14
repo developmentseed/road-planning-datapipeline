@@ -35,3 +35,33 @@ Pont Vincent  RN2,RN2,5S,17.77,18.30103,-72.37511,8,PSI-BA,Béton armé,,
 Pont Chabeau (Limbe)-RN1-ND-LM-PT0006,RN1,5S,18.26,19.66892,-72.41903,17,MIXTE,Ossature mixte acier béton,,
 Ponceau (Cabaret)-RD51-OU-JR-PC0025,RD51,5,18.04,19.8789,-72.96873,2,PSI-DA,Béton armé,RA090303-19691,0.06772012412797518
 ```
+
+## Bridges index
+The `bridges2index` script creates a json file with the list of bridges per roadId.
+Example:
+```json
+  {
+    "RN1-25451": [
+      {
+        "name": "Pont Chabeau (Limbe)-RN1-ND-LM-PT0006",
+        "route": "RN1",
+        "ig": "5S",
+        "igg": 18.26,
+        "lat": 19.66892,
+        "lon": -72.41903,
+        "length": 17,
+        "structure": "MIXTE",
+        "material": "Ossature mixte acier béton",
+        "roadId": "RN1-25451",
+        "distanceMatchingRoad": 0.0022616313488654925
+      }
+    ]
+  }
+```
+
+Requires the output of `bash ./bridges.sh`, specifically the `bridges.csv`
+
+Run with:
+```
+  node bridges2index.js
+```
