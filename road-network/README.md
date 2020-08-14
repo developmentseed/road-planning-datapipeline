@@ -105,5 +105,5 @@ aws s3 cp s3://road-data-production-haiti/roads/base-rn.osm .
 
 Run with:
 ```
-  node extract-ways.js.js
+  node extract-ways.js base-rn.osm roadnetwork-osm-ways.json
 ```
