@@ -42,7 +42,9 @@ async function main () {
       return acc += (aadtVal || 0);
     }, 0);
 
-    odPairAADTIndex[`o${o.o}-d${o.d}`] = aadtSum;
+    // Average the aadt of the ODpair, otherwise the same 300 people traveling
+    // from A to B over 10 segments, would result in 3000.
+    odPairAADTIndex[`o${o.o}-d${o.d}`] = aadtSum / o.routeSegments.length;
   });
 
   const result = {
