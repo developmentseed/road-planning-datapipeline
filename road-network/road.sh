@@ -59,7 +59,7 @@ docker run -it --rm \
     --positive-id
 
 echo 'Generating the OSRM files...'
-cp $(pwd)/lib/osrm_profile-$PROJECT_ID.lua $(pwd)/.tmp/$PROJECT_ID/input/roads
+cp $(pwd)/lib/instance/osrm_profile-$PROJECT_ID.lua $(pwd)/.tmp/$PROJECT_ID/input/roads
 
 # Run extract on the OSM XML
 docker run -it --rm \
@@ -88,6 +88,10 @@ docker run -it --rm \
   developmentseed/osrm-backend:v5.22.0 \
   osrm-customize \
     /data/output/roads/osrm/base-rn.osrm
+
+# Create a list of all ways with their nodes ids and properties
+echo 'Extract ways...'
+node ./road-network/extract-ways.js ./.tmp/$PROJECT_ID/output/roads/base-rn.osm ./.tmp/$PROJECT_ID/output/roads/roadnetwork-osm-ways.json
 
 echo 'All output files stored in /.tmp/'$PROJECT_ID'/output/roads/'
 
