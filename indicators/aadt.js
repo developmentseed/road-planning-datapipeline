@@ -35,7 +35,10 @@ async function main () {
 
   const iRoads = roads.filter(r => r.investible === 'True')
 
-  const roadsWithScore = utils.addScaledScore(iRoads.map(r => ({ roadId: r.roadId, value: Number(r.AADT)})), 'log')
+  const roadsWithScore = utils.addScaledScore(
+    iRoads.map(r => ({ roadId: r.roadId, value: Number(r.AADT)})),
+    { log: true }
+  )
 
   const csvOut = await acsv.stringify(roadsWithScore, { header: true })
   fs.writeFileSync(`${OUTPUT_DIR}/aadt.csv`, csvOut)
