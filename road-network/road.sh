@@ -59,7 +59,7 @@ docker run -it --rm \
     --positive-id
 
 echo 'Generating the OSRM files...'
-cp $(pwd)/lib/instance/osrm_profile-$PROJECT_ID.lua $(pwd)/.tmp/$PROJECT_ID/input/roads
+cp $(pwd)/lib/instance/ruc-profile.lua $(pwd)/.tmp/$PROJECT_ID/input/roads
 
 # Run extract on the OSM XML
 docker run -it --rm \
@@ -67,7 +67,7 @@ docker run -it --rm \
   --user $(id -u):$(id -g) \
   developmentseed/osrm-backend:v5.22.0 \
   osrm-extract \
-    -p /data/input/roads/osrm_profile-$PROJECT_ID.lua \
+    -p /data/input/roads/ruc-profile.lua \
     /data/output/roads/base-rn.osm
 
 # Move OSRM files to folder for organization purposes
