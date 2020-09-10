@@ -37,7 +37,10 @@ async function main () {
 
   const roadsWithScore = utils.addScaledScore(
     iRoads.map(r => ({ roadId: r.roadId, value: Number(r.AADT)})),
-    { log: true }
+    {
+      log: true,
+      customMin: 1
+    }
   )
 
   const csvOut = await acsv.stringify(roadsWithScore, { header: true })

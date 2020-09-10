@@ -1,5 +1,4 @@
 # OD Pairs segment route
-
 This script calculates a route for each OD pair using the **fastest path** method according to the OSRM speed profile in `instance/osrm_profile-haiti` of the [road-planning-functions](https://github.com/developmentseed/road-planning-functions) repo.
 It will return the distance and ids of the road segments used for each route in a `results.json` file.
 Any OD pair that errors will be written out to `error.json`
@@ -51,7 +50,7 @@ Error example:
 
 ## Data requirements
 
-#### Road network
+### Road network
 Each way must have an `id` tag that uniquely identifies the way.
 **Rename the road network to `road-network.osm`**
 
@@ -75,7 +74,7 @@ mv road-network.osrm* rn
 aws s3 cp s3://rr-data-haiti/roads/routes.osm.xml road-network.osm
 ```
 
-#### OD pairs
+### OD pairs
 The od pairs file should be named `odpair.json` and should follow the format described by [od-generator](https://github.com/developmentseed/od-generator).
 
 From od-generator docs:

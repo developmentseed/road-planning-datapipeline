@@ -98,7 +98,8 @@ The result is an array with an object per way:
 
 Requires the `base-rn.osm` output of `bash ./roads.sh`.
 
-Since the script uploads the results to s3, this file can also be downloaded form:
+Since the script uploads the results to s3, this file can also be downloaded from:
+
 ```
 aws s3 cp s3://road-data-production-haiti/roads/base-rn.osm .
 ```
