@@ -60,9 +60,9 @@ To convert the road network to OSRM format:
 cp ../lib/instance/osrm_profile-haiti.lua profile.lua
 
 # Run OSRM
-docker run -t -v "${PWD}:/data" osrm/osrm-backend osrm-extract -p /data/profile.lua /data/road-network.osm
-docker run -t -v "${PWD}:/data" osrm/osrm-backend osrm-partition /data/road-network.osrm
-docker run -t -v "${PWD}:/data" osrm/osrm-backend osrm-customize /data/road-network.osrm
+docker run -t -v "${PWD}:/data" developmentseed/osrm-backend:v5.22.0 osrm-extract -p /data/profile.lua /data/road-network.osm
+docker run -t -v "${PWD}:/data" developmentseed/osrm-backend:v5.22.0 osrm-partition /data/road-network.osrm
+docker run -t -v "${PWD}:/data" developmentseed/osrm-backend:v5.22.0 osrm-customize /data/road-network.osrm
 
 # Move things around
 mkdir rn
