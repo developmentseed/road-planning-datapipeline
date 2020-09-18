@@ -51,8 +51,12 @@ Error example:
 ## Data requirements
 
 ### Road network
-Each way must have an `id` tag that uniquely identifies the way.
-**Rename the road network to `road-network.osm`**
+**Getting the road-network**
+```
+aws s3 cp s3://road-data-production-haiti/roads/base-rn.osm road-network.osm
+```
+
+NOTE: Each way must have an `id` tag that uniquely identifies the way.
 
 To convert the road network to OSRM format:
 ```bash
@@ -67,11 +71,6 @@ docker run -t -v "${PWD}:/data" developmentseed/osrm-backend:v5.22.0 osrm-custom
 # Move things around
 mkdir rn
 mv road-network.osrm* rn
-```
-
-**Getting the road-network**
-```
-aws s3 cp s3://rr-data-haiti/roads/routes.osm.xml road-network.osm
 ```
 
 ### OD pairs
@@ -105,7 +104,7 @@ More info about how the OD pairs were generated can be found in [road-planning-d
 
 **Getting the OD pairs**
 ```
-aws s3 cp s3://rr-data-haiti/aadt-segments/odpairs.json .
+aws s3 cp s3://road-data-input-haiti/roads/odpairs.json .
 ```
 
 ## Running the script
