@@ -33,18 +33,20 @@ async function main () {
   // The count of odpairs in od-pair-segments.json does not match the original
   // od pairs because some were not routable and therefore did not make the file.
   let odPairAADTIndex = {};
+  let erroredSegments = {};
   odPairs.forEach((o, idx) => {
-    const aadtSum = o.routeSegments.reduce((acc, segment) => {
+    const minValue = o.routeSegments.reduce((acc, segment) => {
       const aadtVal = aadtIndex[segment];
-      if (aadtVal === undefined) {
-        console.log(`AADT value missing for segment ${segment} of pair ${key} - Assuming 0`);
+      if (aadtVal === undefined && !erroredSegments[segment]) {
+        erroredSegments[segment] = true;
+        console.log(`AADT value missing for segment ${segment} - Assuming 30`);
       }
-      return acc += (aadtVal || 0);
-    }, 0);
+      return Math.min(aadtVal || 30, acc);
+    }, Infinity);
 
-    // Average the aadt of the ODpair, otherwise the same 300 people traveling
-    // from A to B over 10 segments, would result in 3000.
-    odPairAADTIndex[`o${o.o}-d${o.d}`] = aadtSum / o.routeSegments.length;
+    // Minimum aadt of the ODpair.
+    // https://github.com/developmentseed/road-planning/issues/51
+    odPairAADTIndex[`o${o.o}-d${o.d}`] = minValue;
   });
 
   const result = {
