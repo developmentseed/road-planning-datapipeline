@@ -29,7 +29,7 @@ CSV with the AADT value for each road segment, provided by Xavier.
 More at https://github.com/developmentseed/resilient-roads-haiti/issues/19
 
 ```bash
-aws s3 cp s3://rr-data-haiti/aadt-segments/aadt-per-way.csv .
+aws s3 cp s3://road-data-input-haiti/roads/aadt-per-way.csv .
 ```
 
 
@@ -38,7 +38,7 @@ File with the ids of the ways that compose the route between each ODpair.
 This file is the result of [aadt-segments](../aadt-segments/README.md) calculation, but can be downloaded from s3:
 
 ```bash
-aws s3 cp s3://rr-data-haiti/aadt-segments/result-v2.json od-pair-segments.json
+aws s3 cp s3://road-data-production-haiti/aadt-segments/result.json od-pair-segments.json
 ```
 
 ## Running the script
