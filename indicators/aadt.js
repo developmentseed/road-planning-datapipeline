@@ -1,6 +1,8 @@
 const fs = require('fs-extra')
 const acsv = require('async-csv')
 
+const utils = require('../lib/indicators/utils')
+
 /**
  *
  * Usage:
@@ -31,18 +33,17 @@ async function main () {
 
   const roads = await acsv.parse(fs.readFileSync(INPUT_FILE), { columns: true })
 
-  // Only interested in investible roads
   const iRoads = roads.filter(r => r.investible === 'True')
 
-  const maxAadt = Math.max(...iRoads.map(r => Number(r.AADT)))
+  const roadsWithScore = utils.addScaledScore(
+    iRoads.map(r => ({ roadId: r.roadId, value: Number(r.AADT)})),
+    {
+      log: true,
+      customMin: 1
+    }
+  )
 
-  const finalRoads = iRoads.map(r => ({
-    roadId: r.roadId,
-    value: Number(r.AADT),
-    score: Number(r.AADT) / maxAadt * 100
-  }))
-
-  const csvOut = await acsv.stringify(finalRoads, { header: true })
+  const csvOut = await acsv.stringify(roadsWithScore, { header: true })
   fs.writeFileSync(`${OUTPUT_DIR}/aadt.csv`, csvOut)
 
   return started

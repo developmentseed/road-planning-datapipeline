@@ -1,5 +1,4 @@
 # OD Pairs segment route
-
 This script calculates a route for each OD pair using the **fastest path** method according to the OSRM speed profile in `instance/osrm_profile-haiti` of the [road-planning-functions](https://github.com/developmentseed/road-planning-functions) repo.
 It will return the distance and ids of the road segments used for each route in a `results.json` file.
 Any OD pair that errors will be written out to `error.json`
@@ -51,9 +50,13 @@ Error example:
 
 ## Data requirements
 
-#### Road network
-Each way must have an `id` tag that uniquely identifies the way.
-**Rename the road network to `road-network.osm`**
+### Road network
+**Getting the road-network**
+```
+aws s3 cp s3://road-data-production-haiti/roads/base-rn.osm road-network.osm
+```
+
+NOTE: Each way must have an `id` tag that uniquely identifies the way.
 
 To convert the road network to OSRM format:
 ```bash
@@ -70,12 +73,7 @@ mkdir rn
 mv road-network.osrm* rn
 ```
 
-**Getting the road-network**
-```
-aws s3 cp s3://rr-data-haiti/roads/routes.osm.xml road-network.osm
-```
-
-#### OD pairs
+### OD pairs
 The od pairs file should be named `odpair.json` and should follow the format described by [od-generator](https://github.com/developmentseed/od-generator).
 
 From od-generator docs:
@@ -106,7 +104,7 @@ More info about how the OD pairs were generated can be found in [road-planning-d
 
 **Getting the OD pairs**
 ```
-aws s3 cp s3://rr-data-haiti/aadt-segments/odpairs.json .
+aws s3 cp s3://road-data-input-haiti/roads/odpairs.json .
 ```
 
 ## Running the script
