@@ -24,7 +24,7 @@ async function main () {
   const aadtIndex = await new Promise(resolve => {
     let index = {}
     csv.parse(csvData, { columns: true }, (err, res) => {
-      res.forEach(r => { index[r.Route_ID] = Number(r.AADT); });
+      res.forEach(r => { index[r.mbId] = Number(r.AADT); });
       resolve(index);
     });
   });
