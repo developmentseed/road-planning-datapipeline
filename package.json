@@ -10,6 +10,7 @@
     "@turf/point-to-line-distance": "^6.0.0",
     "async-csv": "^2.1.3",
     "bluebird": "^3.7.2",
+    "cli-progress": "^3.8.2",
     "csv-stringify": "^5.3.6",
     "fs-extra": "^8.1.0",
     "geojson-stream": "^0.1.0",
