@@ -46,7 +46,8 @@ function fillDepths (depths) {
 
     return {
       rp: r,
-      depth: rpDepth ? Number(rpDepth.max) : 0
+      depth: rpDepth ? Number(rpDepth.max) : 0,
+      percFlooded: rpDepth ? Number(rpDepth.count) / (Number(rpDepth.nodata) + Number(rpDepth.count)) : 0
     }
   })
 }
