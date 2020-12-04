@@ -1,0 +1,29 @@
+{
+  "parser": "@babel/eslint-parser", // Specifies the ESLint parser
+  "extends": [
+    "eslint:recommended",
+    "plugin:prettier/recommended"
+  ],
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true
+  },
+  "plugins": ["inclusive-language"],
+  "parserOptions": {
+    "ecmaVersion": 2018, // Allows for the parsing of modern ECMAScript features
+    "sourceType": "module" // Allows for the use of imports
+  },
+  "rules": {
+    "prettier/prettier": ["error", {"semi": true, "singleQuote": true, "parser": "flow"}],
+    "inclusive-language/use-inclusive-words": "error",
+    "semi": [2, "always"],
+    "jsx-quotes": [2, "prefer-single"],
+    "no-console": 2,
+    "no-extra-semi": 2,
+    "semi-spacing": [2, { "before": false, "after": true }],
+    "no-dupe-else-if": 0,
+    "no-setter-return": 0,
+    "prefer-promise-reject-errors": 0
+  }
+}
