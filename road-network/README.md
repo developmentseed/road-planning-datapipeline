@@ -29,8 +29,10 @@ The script will do minor cleaning of the road segments, mostly of the properties
 `s3://[output_bucket]/roads/base-rn.osm`
 * **Vector Tiles**  
 `s3://[output_bucket]/roads/tiles/`
-* **OSRM routing graph**  
-`s3://[output_bucket]/roads/osrm/`
+* **OSRM routing graph - RUC based**  
+`s3://[output_bucket]/roads/osrm/ruc/`
+* **OSRM routing graph - speed based**  
+`s3://[output_bucket]/roads/osrm/speed/`
 * **Way index file**  
 `s3://[output_bucket]/roads/way_index.json`
 * **CSV to populate the database**  
