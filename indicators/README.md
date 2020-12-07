@@ -44,11 +44,11 @@ Requires the following scripts to have run:
 * [flood depths](../floods)
 
 
-## Segment Criticality
+## Segment Usage
 Calculates the score of each segment based on their usage count in the routes from the origin to a given POI type (healthcare, education, etc)
 
 ```
-$ bash indicators/segment-criticality.sh
+$ bash indicators/segment-usage.sh
 ```
 
 ### Pre-requisites
