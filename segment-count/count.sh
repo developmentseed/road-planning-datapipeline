@@ -12,9 +12,9 @@ rm -rf $TMP_OUTPUT
 mkdir -p $TMP_INPUT
 mkdir -p $TMP_OUTPUT
 
-# aws s3 cp --recursive s3://$S3_INPUT/roads/base-rn.osm $TMP_INPUT/roads/base-rn.osm
-# aws s3 cp --recursive s3://$S3_OUTPUT/roads/osrm/speed $TMP_INPUT/roads/osrm/speed
-# aws s3 cp --recursive s3://$S3_INPUT/od $TMP_INPUT/od
+aws s3 cp --recursive s3://$S3_INPUT/roads/base-rn.osm $TMP_INPUT/roads/base-rn.osm
+aws s3 cp --recursive s3://$S3_OUTPUT/roads/osrm/speed $TMP_INPUT/roads/osrm/speed
+aws s3 cp --recursive s3://$S3_INPUT/od $TMP_INPUT/od
 
 echo 'Running the segment count for all OD pairs'
 node segment-count/index.js $TMP_INPUT $TMP_OUTPUT
