@@ -58,7 +58,7 @@ docker run -it --rm \
     -o /data/output/roads/base-rn.osm \
     --positive-id
 
-echo 'Generating the OSRM files...'
+echo 'Generating the OSRM files with the RUC profile...'
 cp $(pwd)/lib/instance/ruc-profile.lua $(pwd)/.tmp/$PROJECT_ID/input/roads
 
 # Run extract on the OSM XML
@@ -71,8 +71,8 @@ docker run -it --rm \
     /data/output/roads/base-rn.osm
 
 # Move OSRM files to folder for organization purposes
-mkdir ./.tmp/$PROJECT_ID/output/roads/osrm -p
-mv ./.tmp/$PROJECT_ID/output/roads/*.osrm* ./.tmp/$PROJECT_ID/output/roads/osrm/
+mkdir ./.tmp/$PROJECT_ID/output/roads/osrm/ruc -p
+mv ./.tmp/$PROJECT_ID/output/roads/*.osrm* ./.tmp/$PROJECT_ID/output/roads/osrm/ruc/
 
 # Run partition and customize
 docker run -it --rm \
@@ -80,14 +80,46 @@ docker run -it --rm \
   --user $(id -u):$(id -g) \
   developmentseed/osrm-backend:v5.22.0 \
   osrm-partition \
-    /data/output/roads/osrm/base-rn.osrm
+    /data/output/roads/osrm/ruc/base-rn.osrm
 
 docker run -it --rm \
   -v $(pwd)/.tmp/$PROJECT_ID/:/data \
   --user $(id -u):$(id -g) \
   developmentseed/osrm-backend:v5.22.0 \
   osrm-customize \
-    /data/output/roads/osrm/base-rn.osrm
+    /data/output/roads/osrm/ruc/base-rn.osrm
+
+
+echo 'Generating the OSRM files with the speed based profile...'
+cp $(pwd)/lib/instance/osrm_profile-haiti.lua $(pwd)/.tmp/$PROJECT_ID/input/roads
+
+# Run extract on the OSM XML
+docker run -it --rm \
+  -v $(pwd)/.tmp/$PROJECT_ID/:/data \
+  --user $(id -u):$(id -g) \
+  developmentseed/osrm-backend:v5.22.0 \
+  osrm-extract \
+    -p /data/input/roads/osrm_profile-haiti.lua \
+    /data/output/roads/base-rn.osm
+
+# Move OSRM files to folder for organization purposes
+mkdir ./.tmp/$PROJECT_ID/output/roads/osrm/speed -p
+mv ./.tmp/$PROJECT_ID/output/roads/*.osrm* ./.tmp/$PROJECT_ID/output/roads/osrm/speed/
+
+# Run partition and customize
+docker run -it --rm \
+  -v $(pwd)/.tmp/$PROJECT_ID/:/data \
+  --user $(id -u):$(id -g) \
+  developmentseed/osrm-backend:v5.22.0 \
+  osrm-partition \
+    /data/output/roads/osrm/speed/base-rn.osrm
+
+docker run -it --rm \
+  -v $(pwd)/.tmp/$PROJECT_ID/:/data \
+  --user $(id -u):$(id -g) \
+  developmentseed/osrm-backend:v5.22.0 \
+  osrm-customize \
+    /data/output/roads/osrm/speed/base-rn.osrm
 
 # Create a list of all ways with their nodes ids and properties
 echo 'Extract ways...'

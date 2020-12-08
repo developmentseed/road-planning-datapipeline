@@ -11,11 +11,29 @@ function osrmRoute(osrm, opts) {
   });
 }
 
+/**
+ *
+ * Usage:
+ *  $node ./segment-count [input-dir] [output-dir]
+ *
+ */
+// This script requires 2 parameters.
+const [, , INPUT_DIR, OUTPUT_DIR] = process.argv;
+
+if (!INPUT_DIR || !OUTPUT_DIR) {
+  console.log(`This script requires two parameters to run:
+  1. Input directory with files.
+  2. Directory where the output files should be stored.
+
+  Eg. $node ./segment-count .tmp/segment-count .out/`);
+
+  process.exit(1);
+}
+
 // File paths definition.
-const ODPAIRS_DIR = './od-pairs';
-const OSRM_FILE = './rn/road-network.osrm';
-const OSM_WAYS_FILE = './roadnetwork-osm-ways.json';
-const RESULTS_DIR = './results';
+const ODPAIRS_DIR = `${INPUT_DIR}/od`;
+const OSRM_FILE = `${INPUT_DIR}/roads/osrm/speed/base-rn.osrm`;
+const RESULTS_DIR = OUTPUT_DIR;
 
 async function main() {
   const started = Date.now();
@@ -48,7 +66,7 @@ async function processOdPairFile(file, osrm) {
     cliProgress.Presets.shades_classic
   );
 
-  const odPairs = await fs.readJSON(path.join(__dirname, 'od-pairs', file));
+  const odPairs = await fs.readJSON(path.join(__dirname, `/../${ODPAIRS_DIR}`, file));
   // Start with the number of pairs to process.
   progressBar.start(odPairs.pairs.length, 0);
 
@@ -75,13 +93,13 @@ async function processOdPairFile(file, osrm) {
     return group;
   }, {});
 
-  const errorFile = path.join(RESULTS_DIR, `${odName}-errors.json`);
+  const errorFile = path.join(__dirname, `/../${RESULTS_DIR}`, `${odName}-errors.json`);
   console.log('Errors:', errors.length, ' - ', errorFile);
-  await fs.writeJSON(path.join(__dirname, errorFile), errors);
+  await fs.writeJSON(errorFile, errors);
 
-  const resultsFile = path.join(RESULTS_DIR, `${odName}-count.json`);
+  const resultsFile = path.join(__dirname, `/../${RESULTS_DIR}`, `${odName}-count.json`);
   console.log('Results:', resultsFile);
-  await fs.writeJSON(path.join(__dirname, resultsFile), counts);
+  await fs.writeJSON(resultsFile, counts);
 
   console.log();
 }

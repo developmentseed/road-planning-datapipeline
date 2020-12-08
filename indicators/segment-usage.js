@@ -6,7 +6,7 @@ const utils = require('../lib/indicators/utils');
 /**
  *
  * Usage:
- *  $node ./indicators/segment-criticality [input-dir] [output-dir]
+ *  $node ./indicators/segment-usage [input-dir] [output-dir]
  *
  */
 
@@ -18,7 +18,7 @@ if (!INPUT_DIR || !OUTPUT_DIR) {
   1. Input directory with files.
   2. Directory where the output files should be stored.
   
-  Eg. $node ./indicators/segment-criticality .tmp/segment-count .out/`);
+  Eg. $node ./indicators/segment-usage .tmp/segment-count .out/`);
 
   process.exit(1);
 }

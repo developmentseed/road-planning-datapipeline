@@ -35,68 +35,13 @@ Error example:
 ```
 ## Data requirements
 
-### Road network
-**Getting the road-network**
-```
-aws s3 cp s3://road-data-production-haiti/roads/base-rn.osm road-network.osm
-```
-
-NOTE: Each way must have an `id` tag that uniquely identifies the way.
-
-To convert the road network to OSRM format:
-```bash
-# Profile need to be in directory for docker to access it
-cp ../lib/instance/osrm_profile-haiti.lua profile.lua
-
-# Run OSRM
-docker run -t -v "${PWD}:/data" developmentseed/osrm-backend:v5.22.0 osrm-extract -p /data/profile.lua /data/road-network.osm
-docker run -t -v "${PWD}:/data" developmentseed/osrm-backend:v5.22.0 osrm-partition /data/road-network.osrm
-docker run -t -v "${PWD}:/data" developmentseed/osrm-backend:v5.22.0 osrm-customize /data/road-network.osrm
-
-# Move things around
-mkdir rn
-mv road-network.osrm* rn
-```
-
-### OD pairs
-The od pairs file should follow the format described by [od-generator](https://github.com/developmentseed/od-generator).
-
-From od-generator docs:
-```
-{
-  "origins": {
-    "type": "FeatureCollection",
-    "features": []
-  },
-  "destinations": {
-    "type": "FeatureCollection",
-    "features": []
-  },
-  "pairs": [
-    {
-      "o": 1,
-      "d": 15
-    },
-    {
-      "o": 1,
-      "d": 16
-    }
-  ]
-}
-```
-
-**Getting the OD pairs**
-```
-aws s3 cp --recursive s3://road-data-input-haiti/od/ ./od-pairs
-```
+* base road network in `.osm` format
+* OSRM routing graph generated using the speed profile (as opposed to cost (RUC) based profile)
+* OD pairs following the format described by [od-generator](https://github.com/developmentseed/od-generator).
 
 ## Running the script
 Run the script with
 
 ```
-node index.js
+bash ./count.sh
 ```
-
-Upload to s3 with
-```
-aws s3 cp --recursive ./results s3://road-data-production-haiti/segment-count
