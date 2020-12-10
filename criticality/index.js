@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+const os = require('os');
 const OSRM = require('osrm');
 const fs = require('fs-extra');
 const path = require('path');
@@ -8,6 +9,8 @@ const acsv = require('async-csv');
 
 const { createSpeedProfile, osrmApplySpeed } = require('./utils');
 const { initLog } = require('./logging');
+
+process.env.UV_THREADPOOL_SIZE = Math.ceil(os.cpus().length * 1.5);
 
 // //////////////////////////////////////////////////////////
 // Config Vars
