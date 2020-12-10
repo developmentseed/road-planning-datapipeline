@@ -22,7 +22,7 @@ const LOG_DIR = path.resolve(__dirname, 'workdir/log');
 const OD_FILE = path.resolve(SRC_DIR, 'odpairs.geojson');
 const WAYS_FILE = path.resolve(SRC_DIR, 'roadnetwork-osm-ways.json');
 const OSRM_FOLDER = path.resolve(SRC_DIR, 'rn');
-const OSRM_FILE_NAME = 'road-network.osrm';
+const OSRM_FILE_NAME = 'base-rn.osrm';
 const OUTPUT_INDICATOR_FILE = path.resolve(WORK_DIR, 'criticality.csv');
 
 // Number of concurrent operations to run.

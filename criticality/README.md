@@ -2,76 +2,18 @@
 
 ## Data requirements
 All files should be inside the `src-files` folder.
-```
-mkdir src-files
-```
 
 ### Road network
 **Getting the road-network**
+Must be the RN built with the speed profile (as opposed to ruc profile)
 ```
-aws s3 cp s3://road-data-production-haiti/roads/base-rn.osm road-network.osm
-```
-
-NOTE: Each way must have an `id` tag that uniquely identifies the way.
-
-To convert the road network to OSRM format:
-```bash
-# Profile need to be in directory for docker to access it
-cp ../lib/instance/osrm_profile-haiti.lua profile.lua
-
-# Run OSRM
-docker run -t -v "${PWD}:/data" developmentseed/osrm-backend:v5.22.0 osrm-extract -p /data/profile.lua /data/road-network.osm
-docker run -t -v "${PWD}:/data" developmentseed/osrm-backend:v5.22.0 osrm-partition /data/road-network.osrm
-docker run -t -v "${PWD}:/data" developmentseed/osrm-backend:v5.22.0 osrm-customize /data/road-network.osrm
-
-# Move things around
-mkdir src-files/rn
-mv road-network.osrm* src-files/rn
-mv profile.lua src-files
-mv road-network.osm src-files
+aws s3 cp --recursive s3://road-data-production-haiti/roads/osrm/speed src-files/rn
 ```
 
-### OD pairs
-The od pairs file should be named `odpair.json` and should follow the format described by [od-generator](https://github.com/developmentseed/od-generator).
-
-From od-generator docs:
-```
-{
-  "origins": {
-    "type": "FeatureCollection",
-    "features": []
-  },
-  "destinations": {
-    "type": "FeatureCollection",
-    "features": []
-  },
-  "pairs": [
-    {
-      "o": 1,
-      "d": 15
-    },
-    {
-      "o": 1,
-      "d": 16
-    }
-  ]
-}
-```
-
-More info about how the OD pairs were generated can be found in [road-planning-datapipeline#14](https://github.com/developmentseed/road-planning-datapipeline/issues/14)
-
-**Getting the OD pairs**
-```
-aws s3 cp s3://road-data-input-haiti/roads/odpairs.json src-files/
-```
-
-# Ways index
+### Ways index
 List of all ways with their nodes ids and properties.
-The result is an array with an object per way:
-
-This can be generated with the `extract-ways` script:
 ```
-node ../road-network/extract-ways.js road-network.osm src-files/roadnetwork-osm-ways.json
+aws s3 cp s3://road-data-production-haiti/roads/roadnetwork-osm-ways.json src-files/
 ```
 
 ```
@@ -98,9 +40,58 @@ node ../road-network/extract-ways.js road-network.osm src-files/roadnetwork-osm-
 ]
 ```
 
+### OD pairs
+The od pairs file should be named `odpairs.geojson` and should be a `FeatureCollection` with all the Points to consider.
+
+**Getting the OD pairs**
+```
+aws s3 cp s3://road-data-input-haiti/population/populated-places.geojson src-files/odpairs.geojson
+```
+
 ## Running the script
 Run the script with
 
 ```
 node --max_old_space_size=4096 index.js
+```
+
+### Setting up EC2
+Dev instruction to run the criticality script in a EC2 - used t3a.xlarge
+
+```
+# Install nvm
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
+
+# Source it
+/home/ec2-user/.bashrc
+
+# Install git
+sudo yum install git -y
+
+# Clone repo
+git clone https://github.com/developmentseed/road-planning-datapipeline.git
+
+nvm install
+npm i -g yarn
+yarn
+
+# Set aws credentials and get data
+export AWS_ACCESS_KEY_ID=
+export AWS_SECRET_ACCESS_KEY=
+
+# Get the data
+
+# Use Linux Screen to keep things running
+## https://linuxize.com/post/how-to-use-linux-screen/
+sudo yum install screen
+
+# New screen session and run
+screen -S criticality
+node --max_old_space_size=4096 index.js
+
+# Zip results
+zip criticality.zip -r workdir/
+
+# store on aws
+aws s3 cp criticality.zip s3://road-data-production-haiti/
 ```
