@@ -19,20 +19,20 @@ const WORK_DIR = path.resolve(__dirname, 'workdir');
 const SRC_DIR = path.resolve(__dirname, 'src-files');
 const LOG_DIR = path.resolve(__dirname, 'workdir/log');
 
-const OD_FILE = path.resolve(SRC_DIR, 'odpairs.json');
+const OD_FILE = path.resolve(SRC_DIR, 'odpairs.geojson');
 const WAYS_FILE = path.resolve(SRC_DIR, 'roadnetwork-osm-ways.json');
 const OSRM_FOLDER = path.resolve(SRC_DIR, 'rn');
 const OSRM_FILE_NAME = 'road-network.osrm';
 const OUTPUT_INDICATOR_FILE = path.resolve(WORK_DIR, 'criticality.csv');
 
 // Number of concurrent operations to run.
-const CONCURR_OPS = 5;
+const CONCURR_OPS = 10;
 
 // Init a global log to capture the console log statements.
 const clog = initLog(`${LOG_DIR}/log-${Date.now()}.log`);
 
 clog('Loading file:', OD_FILE);
-const odPairs = fs.readJsonSync(OD_FILE).destinations;
+const odPairs = fs.readJsonSync(OD_FILE);
 clog('Loading file:', WAYS_FILE);
 var ways = fs.readJsonSync(WAYS_FILE);
 
@@ -94,6 +94,7 @@ async function main() {
   const wayTaskCreator = async (way) => {
     // Calculate the "time lost" for a given way.
     const data = await calcTimePenaltyForWay(way, coords, benchmark);
+    // console.log('Way %d done.', way.id);
     progressBar.increment();
 
     return data;
@@ -175,7 +176,8 @@ function osrmTable(file, opts) {
   return new Promise((resolve, reject) => {
     var osrm = new OSRM({
       path: file,
-      algorithm: 'MLD'
+      algorithm: 'MLD',
+      mmap_memory: false
     });
     osrm.table(opts, (err, response) => {
       if (err) return reject(err);
@@ -260,11 +262,14 @@ async function calcTimePenaltyForWay(way, coords, benchmark) {
   // Speed profile file is no longer needed.
   fs.remove(speedProfileFile);
 
+  // console.time(`routing ${way.id}`);
   const result = await osrmTable(osrmFile, {
     coordinates: coords
   });
+  // console.timeEnd(`routing ${way.id}`);
 
-  await fs.writeJSON(`${LOG_DIR}/ways-times/way-${way.id}-all.json`, result);
+  // Will error for very big matrices because string length will be too big.
+  // await fs.writeJSON(`${LOG_DIR}/ways-times/way-${way.id}-all.json`, result);
 
   // We don't have to wait for files to be removed.
   fs.remove(`${WORK_DIR}/${osrmFolder}`);
@@ -288,10 +293,8 @@ async function calcTimePenaltyForWay(way, coords, benchmark) {
       continue;
     }
 
-    // Find benchmark item.
-    const bMarkItem = benchmark.find(
-      (b) => b.oIdx === route.oIdx && b.dIdx === route.dIdx
-    );
+    // Find benchmark item. The resulting array has the exact same length.
+    const bMarkItem = benchmark[i];
     var deltaT = route.time - bMarkItem.time;
 
     if (deltaT >= 0) timeDeltas.push(deltaT);
