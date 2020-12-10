@@ -41,6 +41,8 @@ var ways = fs.readJsonSync(WAYS_FILE);
 // ways = [
 //   ways.find(way => way.id === '2289499')
 // ];
+// Only keep investible ways.
+ways = ways.filter((w) => w.tags.investible === 'true');
 
 /**
  * Run the criticality analysis.
