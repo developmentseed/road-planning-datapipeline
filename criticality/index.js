@@ -357,7 +357,7 @@ async function calcTimePenaltyForWay(way, coords, benchmark) {
     wayId: way.id,
     mbId: way.tags.mbId,
     roadId: way.tags.roadId,
-    maxTime: Math.max(...timeDeltas),
+    maxTime: arrayMax(timeDeltas),
     avgTime: timeDeltas.reduce((a, b) => a + b) / timeDeltas.length,
     avgTimeNonZero: timeDeltas.reduce((a, b) => a + b) / impactedPairs,
     unroutablePairs,
@@ -367,4 +367,16 @@ async function calcTimePenaltyForWay(way, coords, benchmark) {
   await fs.writeJSON(`${LOG_DIR}/ways-times/way-${way.id}.json`, data);
 
   return data;
+}
+
+// Avoid Maximum call stack size exceeded with Math.max
+// https://stackoverflow.com/questions/42623071/maximum-call-stack-size-exceeded-with-math-min-and-math-max
+function arrayMax(arr) {
+  let len = arr.length;
+  let max = -Infinity;
+
+  while (len--) {
+    max = arr[len] > max ? arr[len] : max;
+  }
+  return max;
 }
