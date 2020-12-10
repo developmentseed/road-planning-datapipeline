@@ -60,9 +60,17 @@ ways = ways.filter((w) => w.tags.investible === 'true');
 async function main() {
   await fs.ensureDir(`${LOG_DIR}/ways-times`);
 
-  const coords = odPairs.features.map((feat) => feat.geometry.coordinates);
+  const coords = odPairs.features.map((feat, idx) => {
+    const { type, coordinates } = feat.geometry;
+    if (type === 'MultiPoint') return coordinates[0];
+    if (type === 'Point') return coordinates;
+    throw new Error(
+      `Invalid geometry type ${type} fount for feature index ${idx}`
+    );
+  });
 
   clog('Working with %d locations', coords.length);
+  clog('Working with %d ways', ways.length);
 
   console.time('benchmark');
   // Run the benchmark analysis
