@@ -56,7 +56,8 @@ docker run -it --rm \
   python ./ogr2osm/ogr2osm.py \
     /data/output/roads/base-rn.geojson \
     -o /data/output/roads/base-rn.osm \
-    --positive-id
+    --positive-id \
+    --split-ways 1 # Don't split long ways
 
 echo 'Generating the OSRM files with the RUC profile...'
 cp $(pwd)/lib/instance/ruc-profile.lua $(pwd)/.tmp/$PROJECT_ID/input/roads
