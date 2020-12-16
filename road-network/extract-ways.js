@@ -17,6 +17,7 @@ const through = require('through2');
 const [, , INPUT_FILE, OUTPUT_FILE] = process.argv;
 
 if (!INPUT_FILE) {
+  /* eslint-disable-next-line no-console */
   console.log(`This script requires two parameters to run:
   1. Input road network in osm format
   2. Output file in json
@@ -36,7 +37,7 @@ const rnFile = fs.createReadStream(RN_FILE);
 const waysFile = fs.createWriteStream(OUTPUT_WAYS);
 
 let start = true;
-function write (row, enc, next) {
+function write(row, enc, next) {
   if (!start) {
     this.push(',\n');
   } else {
@@ -46,7 +47,7 @@ function write (row, enc, next) {
   next(null, JSON.stringify(row));
 }
 
-function end (next) {
+function end(next) {
   next(null, ']\n');
 }
 
@@ -54,7 +55,4 @@ const stream = new Osm2Obj({ types: ['way'] });
 const wayExtract = through.obj(write, end);
 wayExtract.push('[');
 
-rnFile
-  .pipe(stream)
-  .pipe(wayExtract)
-  .pipe(waysFile);
+rnFile.pipe(stream).pipe(wayExtract).pipe(waysFile);
