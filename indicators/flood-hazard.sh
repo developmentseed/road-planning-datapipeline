@@ -7,7 +7,8 @@ S3_OUTPUT=road-data-production
 TMP_INPUT=./.tmp/$PROJECT_ID/input/indicators/flood
 TMP_OUTPUT=./.tmp/$PROJECT_ID/output/indicators/flood
 
-FLOOD_TYPES=(FU FD PU PD)
+# FLOOD_TYPES=(FU FD PU PD)
+FLOOD_TYPES=(FU PU)
 
 echo 'Housekeeping and getting data from S3...'
 rm -rf $TMP_OUTPUT

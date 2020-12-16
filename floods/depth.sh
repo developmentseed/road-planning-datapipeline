@@ -9,7 +9,7 @@ TMP_OUTPUT=./.tmp/$PROJECT_ID/output/floods
 
 RETURN_PERIODS=(5 10 20 50 75 100 200 250 500 1000)
 # FLOOD_TYPES=(FD FU PD PU)
-FLOOD_TYPES=(FU)
+FLOOD_TYPES=(FU PU)
 
 echo 'Housekeeping and getting data from S3...'
 rm -rf ./.tmp/$PROJECT_ID/output/floods/
