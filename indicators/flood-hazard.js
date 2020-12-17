@@ -1,14 +1,10 @@
 const fs = require('fs-extra')
 const acsv = require('async-csv')
-const csv = require('csv')
-const util = require('util')
-const stream = require('stream')
 
 const ead = require('../lib/roads/ead')
 const roadUtils = require('../lib/roads/utils')
 const hazards = require('../lib/instance/hazards')
-
-const pipeline = util.promisify(stream.pipeline)
+const indicatorUtils = require('../lib/indicators/utils')
 
 /**
  *
@@ -61,35 +57,37 @@ async function main () {
   const started = Date.now()
 
   const depths = await acsv.parse(fs.readFileSync(`${INPUT_DIR}/depths.csv`), { columns: true })
+  const roads =  await acsv.parse(fs.readFileSync(`${INPUT_DIR}/rn-props.csv`), { columns: true })
 
-  await pipeline(
-    fs.createReadStream(`${INPUT_DIR}/rn-props.csv`),
-    csv.parse({ columns: true }),
-    csv.transform(road => {
-      // Only interested in investible roads
-      if (!road.investible) return null
+  const iRoads = roads.filter(r => r.investible === '1')
 
-      const segmentDepths = depths.filter(d => d.roadId === road.roadId && d.flood.toLowerCase() === FLOOD_TYPE.toLowerCase())
+  const roadsWithEad = iRoads.map(road => {
+    const segmentDepths = depths.filter(
+      d => d.roadId === road.roadId &&
+      d.flood.toLowerCase() === FLOOD_TYPE.toLowerCase()
+    )
 
-      // Roads that are not flooded under any scenario
-      if (!segmentDepths.length) return {
-        roadId: road.roadId,
-        value: 0
-      }
+    // Roads that are not flooded under any scenario
+    if (!segmentDepths.length) return {
+      roadId: road.roadId,
+      value: 0
+    }
 
-      const allDepths = fillDepths(segmentDepths)
+    const allDepths = fillDepths(segmentDepths)
 
-      // Ensure that all required road props are set
-      const roadSegment = roadUtils.setDefaultAttributes(road)
+    // Ensure that all required road props are set
+    const roadSegment = roadUtils.setDefaultAttributes(road)
 
-      return {
-        roadId: roadSegment.roadId,
-        value: ead.calculateRoadEAD(roadSegment, allDepths)
-      }
-    }),
-    csv.stringify({ header: true }),
-    fs.createWriteStream(`${OUTPUT_DIR}/flood-ead-${FLOOD_TYPE.toLowerCase()}.csv`)
-  )
+    return {
+      roadId: roadSegment.roadId,
+      value: ead.calculateRoadEAD(roadSegment, allDepths)
+    }
+  })
+
+  const roadsWithScore = await indicatorUtils.addScaledScore(roadsWithEad, { log: true, customMin: 0 })
+
+  const csvOut = await acsv.stringify(roadsWithScore, { header: true })
+  fs.writeFileSync(`${OUTPUT_DIR}/flood-ead-${FLOOD_TYPE.toLowerCase()}.csv`, csvOut)
 
   return started
 }
